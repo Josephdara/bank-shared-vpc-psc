@@ -1,6 +1,6 @@
 # Shared VPC + PSC on Google Cloud
 
-> **Sample project** — this repository exists to demonstrate cloud networking design skills on Google Cloud. Nothing here is a production system; it is a worked reference architecture with the reasoning behind each decision.
+> **Simple project**  to demonstrate cloud networking design skills on Google Cloud. Nothing here is a production system; it is a worked reference architecture with the reasoning behind each decision.
 
 ![Architecture diagram](arch.png)
 
@@ -110,9 +110,18 @@ see [SSH test cases](test-cases.md).
 cd terraform && terraform destroy
 ```
 
-`terraform destroy` removes the networking and workloads. The four projects and the
-state bucket created by `bootstrap.sh` are left in place — delete them with
-`gcloud projects delete <project-id>` if you no longer need them.
+`terraform destroy` removes the networking and workloads but leaves the four
+projects, the folder, and the state bucket created by `bootstrap.sh`. To remove
+those too, run the cleanup script from the repo root:
+
+```bash
+./cleanup.sh          # prompts for confirmation; ./cleanup.sh --yes to skip
+```
+
+It deletes the four projects and the folder (deleting the host project also
+removes the state bucket). Projects are recoverable for ~30 days and their IDs
+cannot be reused until then, so bump `PROJECT_SUFFIX` in `.env` before a fresh
+`bootstrap.sh` if you redeploy soon.
 
 ## Repository contents
 
@@ -138,3 +147,4 @@ The design is considered working when:
 - [Shared VPC overview and subnet-level IAM](https://docs.cloud.google.com/vpc/docs/shared-vpc)
 - [VPC firewall rules and service-account targets](https://docs.cloud.google.com/firewall/docs/firewalls)
 - [Private Service Connect published services](https://docs.cloud.google.com/vpc/docs/create-access-private-service-connect-service)
+
