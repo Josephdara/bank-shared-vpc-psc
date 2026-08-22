@@ -1,0 +1,6 @@
+# Copy to backend.hcl and set the state bucket created by ../bootstrap.sh
+# (printed as "State bucket=gs://..."), then:
+#   terraform init -backend-config=backend.hcl
+
+bucket = "svpc-psc-host-xxxxxx-tfstate" # correct your bucket
+prefix = "state"                        # state stored at gs://<bucket>/state/

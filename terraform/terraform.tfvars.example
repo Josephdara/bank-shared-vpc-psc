@@ -1,0 +1,21 @@
+# Copy to terraform.tfvars and fill in the project IDs printed by ../bootstrap.sh.
+#   cp terraform.tfvars.example terraform.tfvars
+
+host_project_id      = "svpc-psc-host-xxxxxx"
+service_a_project_id = "svpc-psc-svc-a-xxxxxx"
+service_b_project_id = "svpc-psc-svc-b-xxxxxx"
+partner_project_id   = "svpc-psc-partner-xxxxxx"
+
+# Numeric folder ID from .env FOLDER_ID (bootstrap fills it in). Used for the
+# aggregated VPC Flow Logs sink that captures logs across all four projects.
+folder_id = "123456789012"
+
+# Optional overrides (defaults match arch.md):
+# region                = "us-central1"
+# analytics_region      = "us-east1"
+# prod_subnet_cidr      = "10.0.1.0/24"
+# analytics_subnet_cidr = "10.0.2.0/24"
+# psc_nat_subnet_cidr   = "10.0.3.0/28"
+# partner_subnet_cidr   = "192.168.1.0/24"
+# app_port              = 80
+# db_port               = 5432

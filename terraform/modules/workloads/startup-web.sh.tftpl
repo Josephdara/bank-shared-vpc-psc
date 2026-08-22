@@ -1,0 +1,66 @@
+#!/bin/bash
+# Shared VPC + PSC demo web/API workload.
+# Serves a static page that confirms the request reached this backend.
+#
+# The VM has no external IP and there is no Cloud NAT, so this relies only on
+# python3 from the base Debian image — no package downloads.
+set -euo pipefail
+
+mkdir -p /var/www
+
+cat > /var/www/index.html <<HTML
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shared VPC + PSC API</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, sans-serif; background:#f7f9fc;
+           color:#172033; display:flex; min-height:100vh; margin:0;
+           align-items:center; justify-content:center; }
+    .card { background:#fff; border:1px solid #d5dce6; border-radius:16px;
+            padding:40px 48px; box-shadow:0 6px 20px rgba(35,48,74,.08); max-width:520px; }
+    h1 { margin:0 0 8px; font-size:26px; }
+    .ok { color:#188038; }
+    p { color:#465266; line-height:1.5; }
+    dl { margin:20px 0 0; display:grid; grid-template-columns:auto 1fr; gap:8px 16px; }
+    dt { color:#5f6b7a; font-size:13px; }
+    dd { margin:0; font-family:ui-monospace, Menlo, monospace; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1><span class="ok">&#10003;</span> Connection successful</h1>
+    <p>You reached the retail web/API workload. If you came from the partner
+       project, this response arrived over the Private Service Connect path —
+       the single published service.</p>
+    <dl>
+      <dt>Served by</dt><dd>$(hostname)</dd>
+      <dt>Backend IP</dt><dd>$(hostname -I | awk '{print $1}')</dd>
+      <dt>Listening port</dt><dd>${app_port}</dd>
+      <dt>Subnet</dt><dd>prod-subnet</dd>
+    </dl>
+  </div>
+</body>
+</html>
+HTML
+
+# Run the server under systemd so it survives reboots and restarts on failure.
+cat > /etc/systemd/system/demo-web.service <<'UNIT'
+[Unit]
+Description=Shared VPC + PSC demo web server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m http.server ${app_port} --directory /var/www
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+systemctl daemon-reload
+systemctl enable --now demo-web.service
