@@ -48,7 +48,7 @@ if [[ -n "${FOLDER_ID:-}" ]]; then
   echo "Deleting folder $FOLDER_ID"
   if ! gcloud resource-manager folders delete "$FOLDER_ID" --quiet; then
     echo
-    echo "Folder delete failed — the projects are likely still draining."
+    echo "Folder delete failed. The projects are likely still draining."
     echo "Wait for them to finish, then re-run ./cleanup.sh --yes, or delete manually:"
     echo "  gcloud resource-manager folders delete $FOLDER_ID"
   fi

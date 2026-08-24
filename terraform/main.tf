@@ -1,4 +1,4 @@
-# Root module — wires the stages together. Apply order is enforced by the
+# Root module: wires the stages together. Apply order is enforced by the
 # dependency graph (explicit depends_on where an implicit edge is not enough).
 
 locals {
@@ -8,7 +8,7 @@ locals {
   analytics_zone = coalesce(var.analytics_zone, "${var.analytics_region}-b")
 }
 
-# Stage 2 — host networking: Shared VPC, subnets, PSC NAT subnet.
+# Stage 2: host networking, Shared VPC, subnets, PSC NAT subnet.
 module "network" {
   source = "./modules/network"
 
@@ -21,7 +21,7 @@ module "network" {
   depends_on = [google_project_service.this]
 }
 
-# Observability — route VPC Flow Logs (enabled on the subnets above) to BigQuery.
+# Observability: route VPC Flow Logs (enabled on the subnets above) to BigQuery.
 module "logging" {
   source = "./modules/logging"
 
@@ -32,7 +32,7 @@ module "logging" {
   depends_on = [google_project_service.this]
 }
 
-# Stage 3 — service-project attachment, service accounts, subnet-level IAM.
+# Stage 3: service-project attachment, service accounts, subnet-level IAM.
 module "iam" {
   source = "./modules/iam"
 
@@ -50,7 +50,7 @@ module "iam" {
 
 }
 
-# Stage 4 — workloads (web/API MIG, database VM) and the central firewall rules.
+# Stage 4: workloads (web/API MIG, database VM) and the central firewall rules.
 module "workloads" {
   source = "./modules/workloads"
 
@@ -83,7 +83,7 @@ module "workloads" {
 
 }
 
-# Stage 5 — private partner access: internal LB, PSC service attachment, endpoint.
+# Stage 5: private partner access, internal LB, PSC service attachment, endpoint.
 module "psc" {
   source = "./modules/psc"
 

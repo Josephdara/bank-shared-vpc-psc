@@ -1,4 +1,4 @@
-# Stage 4 — workloads and the central (identity-based) firewall.
+# Stage 4: workloads and the central (identity-based) firewall.
 
 # --- Web / API workload (service project A, prod-subnet) -------------------
 resource "google_compute_instance_template" "web" {
@@ -77,7 +77,7 @@ resource "google_compute_instance" "db" {
 # --- Central firewall rules (host project owns the Shared VPC) -------------
 
 # The core control: allow the database port ONLY from web-app-sa to db-sa.
-# Identity-scoped — no IP ranges — so it holds regardless of addressing.
+# Identity-scoped, with no IP ranges, so it holds regardless of addressing.
 resource "google_compute_firewall" "allow_web_to_db" {
   project   = var.host_project_id
   name      = "allow-web-to-db"

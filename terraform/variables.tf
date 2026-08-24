@@ -6,17 +6,17 @@ variable "host_project_id" {
 
 variable "service_a_project_id" {
   type        = string
-  description = "Service project A — retail web and private API."
+  description = "Service project A: retail web and private API."
 }
 
 variable "service_b_project_id" {
   type        = string
-  description = "Service project B — analytics and database."
+  description = "Service project B: analytics and database."
 }
 
 variable "partner_project_id" {
   type        = string
-  description = "External partner project — PSC consumer."
+  description = "External partner project: PSC consumer."
 }
 
 # ---- Regions / zones ----
@@ -44,7 +44,7 @@ variable "analytics_zone" {
   default     = null
 }
 
-# Note: the partner VPC subnet and PSC endpoint always use `region` — PSC requires
+# Note: the partner VPC subnet and PSC endpoint always use `region`. PSC requires
 # the consumer endpoint and producer service attachment to share a region.
 
 # ---- Networking ----

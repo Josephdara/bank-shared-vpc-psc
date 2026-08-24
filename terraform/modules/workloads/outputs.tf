@@ -1,5 +1,5 @@
 output "web_instance_group" {
-  description = "Regional MIG instance group — backend for the internal LB."
+  description = "Regional MIG instance group: backend for the internal LB."
   value       = google_compute_region_instance_group_manager.web.instance_group
 }
 

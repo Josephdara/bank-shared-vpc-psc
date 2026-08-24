@@ -1,4 +1,4 @@
-# Stage 5 — private partner access via Private Service Connect.
+# Stage 5: private partner access via Private Service Connect.
 
 locals {
   # Partner resources share the producer region (PSC requires it); derive a zone.
@@ -30,7 +30,7 @@ resource "google_compute_region_backend_service" "web" {
   }
 }
 
-# Internal passthrough LB frontend — the private frontend of the API.
+# Internal passthrough LB frontend: the private frontend of the API.
 resource "google_compute_forwarding_rule" "ilb" {
   project               = var.service_a_project_id
   name                  = "web-app-ilb"
@@ -63,7 +63,7 @@ resource "google_compute_service_attachment" "api" {
 
 # --- Consumer: partner VPC and the PSC endpoint ---------------------------
 # The partner has its own custom-mode VPC and reaches the bank only through the
-# PSC endpoint below — the single published service, nothing else.
+# PSC endpoint below: the single published service, nothing else.
 resource "google_compute_network" "partner" {
   project                 = var.partner_project_id
   name                    = var.partner_network_name

@@ -1,4 +1,4 @@
-# Stage 3 — service-project attachment, workload identities, subnet-level IAM.
+# Stage 3: service-project attachment, workload identities, subnet-level IAM.
 
 # Project numbers, used to build the Google APIs (cloudservices) agent members.
 data "google_project" "service_a" {

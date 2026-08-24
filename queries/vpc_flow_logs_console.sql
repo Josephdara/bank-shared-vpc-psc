@@ -1,11 +1,11 @@
--- VPC Flow Logs — BigQuery console queries (GoogleSQL)
+-- VPC Flow Logs: BigQuery console queries (GoogleSQL)
 --
 -- Paste ONE query at a time into the BigQuery query editor and Run.
 -- Table (host project, derived svpc-psc-host-v1). If your host project ID
 -- differs, replace it in the FROM clause of each query.
 --
 -- protocol: 6 = TCP, 17 = UDP, 1 = ICMP.
--- Each connection is logged twice (reporter SRC and DEST) — filter to one
+-- Each connection is logged twice (reporter SRC and DEST), so filter to one
 -- before summing bytes/packets. bytes_sent/packets_sent are STRINGs (CAST).
 -- The sink is folder-aggregated, so rows arrive from all four projects; the
 -- src_project / dest_project columns show which project each side lives in.

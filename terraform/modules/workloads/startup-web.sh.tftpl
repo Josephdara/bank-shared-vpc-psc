@@ -3,7 +3,7 @@
 # Serves a static page that confirms the request reached this backend.
 #
 # The VM has no external IP and there is no Cloud NAT, so this relies only on
-# python3 from the base Debian image — no package downloads.
+# python3 from the base Debian image, with no package downloads.
 set -euo pipefail
 
 mkdir -p /var/www
@@ -33,7 +33,7 @@ cat > /var/www/index.html <<HTML
   <div class="card">
     <h1><span class="ok">&#10003;</span> Connection successful</h1>
     <p>You reached the retail web/API workload. If you came from the partner
-       project, this response arrived over the Private Service Connect path —
+       project, this response arrived over the Private Service Connect path,
        the single published service.</p>
     <dl>
       <dt>Served by</dt><dd>$(hostname)</dd>

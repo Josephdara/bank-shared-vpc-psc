@@ -11,7 +11,7 @@ set -a; source .env; set +a
 : "${BILLING_ACCOUNT_ID:?set BILLING_ACCOUNT_ID in .env}"
 
 # A stable suffix keeps project IDs globally unique and reruns idempotent.
-# Persisting only the suffix is enough — every other name derives from it.
+# Persisting only the suffix is enough, since every other name derives from it.
 if [[ -z "${PROJECT_SUFFIX:-}" ]]; then
   PROJECT_SUFFIX="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c6)"
   perl -i -pe "s/^PROJECT_SUFFIX=.*/PROJECT_SUFFIX=$PROJECT_SUFFIX/" .env
@@ -26,7 +26,7 @@ BUCKET="${TF_STATE_BUCKET:-$HOST-tfstate}"
 
 # Parent for the projects. If FOLDER_ID is set, use it as-is. Otherwise, when an
 # ORG_ID is given, create (or reuse) a folder under the org and place the
-# projects there — keeps this demo's four projects grouped and easy to clean up.
+# projects there. This keeps the demo's four projects grouped and easy to clean up.
 FOLDER_NAME="${FOLDER_NAME:-shared-vpc-psc}"
 if [[ -z "${FOLDER_ID:-}" && -n "${ORG_ID:-}" ]]; then
   FOLDER_ID="$(gcloud resource-manager folders list --organization="$ORG_ID" \

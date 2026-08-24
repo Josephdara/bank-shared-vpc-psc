@@ -1,4 +1,4 @@
-# Stage 2 — host networking.
+# Stage 2: host networking.
 
 # Promote the host project to a Shared VPC host.
 resource "google_compute_shared_vpc_host_project" "host" {

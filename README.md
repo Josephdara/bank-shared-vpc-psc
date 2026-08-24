@@ -2,17 +2,19 @@
 
 > **Simple project**  to demonstrate cloud networking design skills on Google Cloud. Nothing here is a production system; it is a worked reference architecture with the reasoning behind each decision.
 
-![Architecture diagram](arch.png)
+**Full write-up:** [Enterprise GCP Networking in Practice](https://josephdara.hashnode.dev/networking-psc), the design reasoning behind this build.
+
+![Shared VPC and Private Service Connect across four projects](terraform-architecture.png)
 
 ## What this demonstrates
 
-A four-project banking-style architecture that combines two core GCP networking patterns — **Shared VPC** for centralized bank workloads and **Private Service Connect** for publishing a single API to an external partner:
+A four-project banking-style architecture that combines two core GCP networking patterns: **Shared VPC** for centralized bank workloads and **Private Service Connect** for publishing a single API to an external partner:
 
-- **Shared VPC (custom mode)** — a central host project owns the network; two service projects run workloads on subnets they are granted access to, giving a single control plane for the network and its firewalling.
-- **Subnet-level least-privilege IAM** — service project A gets `roles/compute.networkUser` on `prod-subnet` only; service project B on `analytics-subnet` only.
-- **Identity-based firewalling** — east-west traffic (web tier to database on TCP 5432) is allowed by *service account identity* (`web-app-sa` → `db-sa`), not by IP ranges.
-- **Private Service Connect (PSC)** — an external partner consumes a single published API through a PSC endpoint in its own project. The API, not the network, is the trust boundary: the partner reaches only the published service.
-- **Network observability** — VPC Flow Logs on the bank subnets are routed to a BigQuery dataset via a logging sink in the host project, so east-west and PSC traffic can be queried.
+- **Shared VPC (custom mode)**: a central host project owns the network; two service projects run workloads on subnets they are granted access to, giving a single control plane for the network and its firewalling.
+- **Subnet-level least-privilege IAM**: service project A gets `roles/compute.networkUser` on `prod-subnet` only; service project B on `analytics-subnet` only.
+- **Identity-based firewalling**: east-west traffic (web tier to database on TCP 5432) is allowed by *service account identity* (`web-app-sa` → `db-sa`), not by IP ranges.
+- **Private Service Connect (PSC)**: an external partner consumes a single published API through a PSC endpoint in its own project. The API, not the network, is the trust boundary: the partner reaches only the published service.
+- **Network observability**: VPC Flow Logs on the bank subnets are routed to a BigQuery dataset via a logging sink in the host project, so east-west and PSC traffic can be queried.
 
 
 
@@ -42,7 +44,7 @@ A four-project banking-style architecture that combines two core GCP networking 
 
 ### Prerequisites
 
-- `[gcloud](https://cloud.google.com/sdk/docs/install)` and `[terraform](https://developer.hashicorp.com/terraform/install)` installed.
+- [gcloud](https://cloud.google.com/sdk/docs/install) and [terraform](https://developer.hashicorp.com/terraform/install) installed.
 - Authenticated for both the CLI and Terraform:
   ```bash
   gcloud auth login
@@ -56,11 +58,10 @@ A four-project banking-style architecture that combines two core GCP networking 
 
 ```bash
 cp .env.example .env          # then edit: ORG_ID (or FOLDER_ID) and BILLING_ACCOUNT_ID
-chmod +x bootstrap.sh         # make the script executable (first run only)
 ./bootstrap.sh                # creates the 4 projects, links billing, creates the state bucket
 ```
 
-`bootstrap.sh` prints the four project IDs and the state bucket name — you'll need them next.
+`bootstrap.sh` prints the four project IDs and the state bucket name. You'll need them next.
 
 ### 2. Deploy the architecture
 
@@ -98,7 +99,7 @@ gcloud compute ssh "$(terraform output -raw partner_client_vm)" \
   --command="curl -s http://$(terraform output -raw psc_endpoint_ip)/"
 ```
 
-Expect the "Connection successful" page — proof the partner reached the published API
+Expect the "Connection successful" page, proof the partner reached the published API
 over Private Service Connect. (The first IAP SSH may take a minute while keys propagate.)
 
 For positive, negative, and isolation checks that run through the partner VM,
@@ -125,10 +126,10 @@ cannot be reused until then, so bump `PROJECT_SUFFIX` in `.env` before a fresh
 
 ## Repository contents
 
-- [arch.png](arch.png) / [arch.svg](arch.svg) — the architecture diagram (PNG rendered from the SVG source).
-- [arch.md](arch.md) — detailed security controls, the staged Terraform build order, and verification tests.
-- [IAM.md](IAM.md) — least-privilege deployment roles, scopes, and bootstrap-only access.
-- [test-cases.md](test-cases.md) — executable control-plane and SSH tests for PSC reachability, partner isolation, and Shared VPC connectivity.
+- [terraform-architecture.svg](terraform-architecture.svg) / [terraform-architecture.png](terraform-architecture.png): the architecture diagram (SVG source; PNG rendered from it).
+- [arch.md](arch.md): detailed security controls, the staged Terraform build order, and verification tests.
+- [IAM.md](IAM.md): least-privilege deployment roles, scopes, and bootstrap-only access.
+- [test-cases.md](test-cases.md): executable control-plane and SSH tests for PSC reachability, partner isolation, and Shared VPC connectivity.
 
 
 

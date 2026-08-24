@@ -1,4 +1,4 @@
-# Terraform — Shared VPC + PSC
+# Terraform: Shared VPC + PSC
 
 Provisions the secure banking reference architecture from [`../arch.md`](../arch.md)
 across four projects created by [`../bootstrap.sh`](../bootstrap.sh).
@@ -53,13 +53,13 @@ After apply:
 
 - The web tier is a minimal single-instance regional MIG. Its startup script
   (`modules/workloads/startup-web.sh.tftpl`) serves a static "connection
-  successful" page on `app_port` (default 80) using python3 from the base image —
-  no package downloads, since the VM has no egress. The database is a plain VM
-  (per `arch.md`, a VM — not Cloud SQL) with no listener yet; add one on `db_port`
+  successful" page on `app_port` (default 80) using python3 from the base image,
+  with no package downloads, since the VM has no egress. The database is a plain
+  VM (per `arch.md`, a VM, not Cloud SQL) with no listener yet; add one on `db_port`
   to exercise the web→db firewall path end to end.
 - Subnet `networkUser` is granted to the two workload service accounts. Depending
   on how instances are created you may also need to grant it to each service
-  project's Compute service agent — add those bindings in `modules/iam` if a plan
+  project's Compute service agent. Add those bindings in `modules/iam` if a plan
   reports a permission gap.
-- The partner endpoint reuses `region` (the service attachment region) — PSC
+- The partner endpoint reuses `region` (the service attachment region). PSC
   requires the two to match, so there is no separate partner-region knob.

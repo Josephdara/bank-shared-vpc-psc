@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1060" viewBox="0 0 1800 1060" role="img" aria-labelledby="t d">
+  <title id="t">Shared VPC and Private Service Connect on Google Cloud</title>
+  <desc id="d">Four projects: a host project owning the Shared VPC, subnets and firewall rules; service project A running the web workload behind an internal passthrough load balancer published as a PSC service attachment; service project B running the database VM; and a partner project consuming the published service through a PSC endpoint.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090e14"/><stop offset="1" stop-color="#111a25"/>
+    </linearGradient>
+    <filter id="sh" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+    <marker id="a-o" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L14 6 L0 12 Z" fill="#ff9b42"/></marker>
+    <marker id="a-v" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L14 6 L0 12 Z" fill="#b581ff"/></marker>
+    <marker id="a-b" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L14 6 L0 12 Z" fill="#5aa2ff"/></marker>
+    <marker id="a-g" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L14 6 L0 12 Z" fill="#5fd694"/></marker>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+      .h1{font-size:32px;font-weight:760;fill:#f6f8fb}
+      .h2{font-size:14.5px;font-weight:480;fill:#95a3b5}
+      .proj{font-size:23px;font-weight:750;fill:#f7f9fc}
+      .psub{font-size:14px;font-weight:460;fill:#9aa8ba}
+      .sec{font-size:18px;font-weight:700;fill:#f4f7fb}
+      .card{font-size:17px;font-weight:680;fill:#f4f7fb}
+      .body{font-size:14px;font-weight:470;fill:#c3ccd8}
+      .mi{font-size:13px;font-weight:520;fill:#aab5c3}
+      .eb{font-size:11.5px;font-weight:700;letter-spacing:.09em}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;font-weight:600;fill:#c9d2dd}
+      .b{fill:#5aa2ff}.v{fill:#b581ff}.o{fill:#ff9b42}.c{fill:#46d7ee}.g{fill:#5fd694}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1060" fill="url(#bg)"/>
+  <text class="h1" x="900" y="44" text-anchor="middle">Shared VPC + Private Service Connect</text>
+  <text class="h2" x="900" y="72" text-anchor="middle">Four projects, one host network, one published service</text>
+
+  <!-- ======= PROJECT CONTAINERS ======= -->
+  <rect x="36" y="96" width="420" height="844" rx="24" fill="#101821" stroke="#dbe1e9" stroke-width="2.2" filter="url(#sh)"/>
+  <rect x="516" y="96" width="560" height="844" rx="24" fill="#101821" stroke="#dbe1e9" stroke-width="2.2" filter="url(#sh)"/>
+  <rect x="1136" y="96" width="628" height="300" rx="24" fill="#101821" stroke="#dbe1e9" stroke-width="2.2" filter="url(#sh)"/>
+  <rect x="1136" y="436" width="628" height="504" rx="24" fill="#101821" stroke="#dbe1e9" stroke-width="2.2" filter="url(#sh)"/>
+
+  <text class="proj" x="246"  y="136" text-anchor="middle">Host Project</text>
+  <text class="proj" x="796"  y="136" text-anchor="middle">Service Project A</text>
+  <text class="proj" x="1450" y="136" text-anchor="middle">Service Project B</text>
+  <text class="proj" x="1450" y="476" text-anchor="middle">Partner Project</text>
+
+  <!-- ======= HOST: SHARED VPC ======= -->
+  <rect x="54" y="156" width="384" height="330" rx="18" fill="#0d151d" stroke="#5aa2ff" stroke-width="2"/>
+  <text class="sec b" x="76" y="187">bank-shared-vpc</text>
+  <text class="mi"    x="76" y="208">custom mode · global routing</text>
+
+  <rect x="70" y="218" width="352" height="80" rx="13" fill="#111d29" stroke="#4e9cff" stroke-width="1.7"/>
+  <text class="card" x="92" y="250">prod-subnet</text>
+  <text class="body" x="92" y="276">10.0.1.0/24 · us-central1</text>
+  <rect x="306" y="232" width="98" height="22" rx="11" fill="#12283f" stroke="#4e9cff" stroke-width="1"/>
+  <text class="eb b" x="355" y="247" text-anchor="middle">FLOW LOGS</text>
+
+  <rect x="70" y="306" width="352" height="80" rx="13" fill="#171427" stroke="#a66cf4" stroke-width="1.7"/>
+  <text class="card" x="92" y="338">analytics-subnet</text>
+  <text class="body" x="92" y="364">10.0.2.0/24 · us-east1</text>
+  <rect x="306" y="320" width="98" height="22" rx="11" fill="#231b3c" stroke="#a66cf4" stroke-width="1"/>
+  <text class="eb v" x="355" y="335" text-anchor="middle">FLOW LOGS</text>
+
+  <rect x="70" y="394" width="352" height="80" rx="13" fill="#25190f" stroke="#f08b2b" stroke-width="1.7"/>
+  <text class="card" x="92" y="426">psc-nat-subnet</text>
+  <rect x="298" y="410" width="106" height="22" rx="11" fill="#33230f" stroke="#f08b2b" stroke-width="1"/>
+  <text class="eb o" x="351" y="425" text-anchor="middle">10.0.3.0/28</text>
+  <text class="mono o" x="92" y="454">purpose = PRIVATE_SERVICE_CONNECT</text>
+
+  <!-- ======= HOST: FIREWALL ======= -->
+  <rect x="54" y="506" width="384" height="186" rx="18" fill="#101c22" stroke="#46d7ee" stroke-width="1.9"/>
+  <text class="sec c" x="76" y="538">VPC firewall rules</text>
+  <text class="card" x="76" y="570" style="font-size:15px">allow-web-to-db</text>
+  <text class="mi v"  x="76" y="590">tcp/5432 · web-app-sa → database-sa</text>
+  <text class="card" x="76" y="620" style="font-size:15px">allow-lb-health-check</text>
+  <text class="mi"    x="76" y="640">tcp/80 · 35.191.0.0/16, 130.211.0.0/22</text>
+  <text class="card" x="76" y="670" style="font-size:15px">allow-psc-to-web</text>
+  <text class="mi o"  x="76" y="690">tcp/80 · from 10.0.3.0/28</text>
+
+  <!-- ======= HOST: IAM ======= -->
+  <rect x="54" y="712" width="384" height="114" rx="18" fill="#111a24" stroke="#8494a8" stroke-width="1.9"/>
+  <text class="sec" x="76" y="744">Shared VPC attachment</text>
+  <text class="mi b" x="76" y="776">Service A → networkUser on prod-subnet</text>
+  <text class="mi v" x="76" y="804">Service B → networkUser on analytics-subnet</text>
+
+  <!-- ======= HOST: BIGQUERY ======= -->
+  <rect x="54" y="846" width="384" height="86" rx="18" fill="#102019" stroke="#5fd694" stroke-width="1.9"/>
+  <text class="sec g" x="76" y="878">BigQuery · vpc_flow_logs</text>
+  <text class="mi"    x="76" y="906">location US · partitioned tables</text>
+
+  <!-- ======= SERVICE A ======= -->
+  <rect x="536" y="156" width="520" height="38" rx="12" fill="#111d29" stroke="#4e9cff" stroke-width="1.6"/>
+  <text class="mi b" x="558" y="181">workload identity: web-app-sa</text>
+
+  <rect x="536" y="208" width="520" height="182" rx="18" fill="#0e1822" stroke="#4e9cff" stroke-width="1.9"/>
+  <text class="sec b" x="558" y="240">Web tier</text>
+
+  <rect x="556" y="258" width="220" height="112" rx="13" fill="#13202c" stroke="#718aa4" stroke-width="1.7"/>
+  <text class="card" x="576" y="288">web-app-*</text>
+  <text class="mi"   x="576" y="310">instance template</text>
+  <text class="mi"   x="576" y="332">e2-small · Debian 12</text>
+  <text class="mi"   x="576" y="352">no external IP · serves :80</text>
+
+  <rect x="816" y="258" width="220" height="112" rx="13" fill="#111d29" stroke="#4e9cff" stroke-width="1.7"/>
+  <text class="card" x="836" y="288">web-app-mig</text>
+  <text class="mi"   x="836" y="310">regional MIG · size 1</text>
+  <text class="mi"   x="836" y="332">named port app:80</text>
+  <text class="mi b" x="836" y="352">NIC: prod-subnet</text>
+  <path d="M776 314 H812" fill="none" stroke="#5aa2ff" stroke-width="3.2" marker-end="url(#a-b)"/>
+
+  <!-- ======= SERVICE A: INTERNAL LB ======= -->
+  <rect x="536" y="412" width="520" height="302" rx="18" fill="#17130f" stroke="#f08b2b" stroke-width="2.2"/>
+  <text class="sec o" x="558" y="446">Internal passthrough NLB</text>
+  <text class="mi"    x="558" y="468">producer front end · us-central1 · tcp/80</text>
+
+  <rect x="556" y="484" width="220" height="100" rx="13" fill="#25190f" stroke="#f08b2b" stroke-width="1.7"/>
+  <text class="eb o" x="576" y="510">FORWARDING RULE</text>
+  <text class="card" x="576" y="536">web-app-ilb</text>
+  <text class="mono" x="576" y="562">scheme = INTERNAL</text>
+
+  <rect x="816" y="484" width="220" height="100" rx="13" fill="#25190f" stroke="#f08b2b" stroke-width="1.7"/>
+  <text class="eb o" x="836" y="510">BACKEND SERVICE</text>
+  <text class="card" x="836" y="536">web-app-backend</text>
+  <text class="mono" x="836" y="562">TCP · CONNECTION</text>
+
+  <rect x="816" y="604" width="220" height="92" rx="13" fill="#25190f" stroke="#f08b2b" stroke-width="1.7"/>
+  <text class="eb o" x="836" y="630">HEALTH CHECK</text>
+  <text class="card" x="836" y="656">web-app-hc</text>
+  <text class="mi"   x="836" y="680">regional TCP · :80</text>
+
+  <path d="M776 534 H812" fill="none" stroke="#ff9b42" stroke-width="3.2" marker-end="url(#a-o)"/>
+  <path d="M926 604 V590" fill="none" stroke="#ff9b42" stroke-width="2.6" stroke-dasharray="5 5" marker-end="url(#a-o)"/>
+  <path d="M986 484 V376" fill="none" stroke="#ff9b42" stroke-width="3.2" marker-end="url(#a-o)"/>
+
+  <!-- ======= SERVICE A: PSC SERVICE ATTACHMENT ======= -->
+  <rect x="536" y="750" width="520" height="172" rx="18" fill="#25190f" stroke="#f08b2b" stroke-width="2.2"/>
+  <text class="eb o"  x="558" y="782">PSC SERVICE ATTACHMENT</text>
+  <text class="sec"   x="558" y="812">retail-api-psc</text>
+  <text class="body o" x="558" y="842">target: web-app-ilb</text>
+  <text class="mi"    x="558" y="868">ACCEPT_MANUAL · partner project only · limit 1</text>
+  <text class="mi o"  x="558" y="894">NAT subnet: psc-nat-subnet</text>
+
+  <path d="M666 750 V592" fill="none" stroke="#ff9b42" stroke-width="3.2" marker-end="url(#a-o)"/>
+  <path d="M422 434 H486 V836 H530" fill="none" stroke="#f08b2b" stroke-width="2.4" stroke-dasharray="7 7"/>
+  <circle cx="422" cy="434" r="4" fill="#f08b2b"/>
+
+  <!-- ======= SERVICE B ======= -->
+  <rect x="1156" y="156" width="588" height="38" rx="12" fill="#171427" stroke="#a66cf4" stroke-width="1.6"/>
+  <text class="mi v" x="1178" y="181">workload identity: database-sa</text>
+
+  <rect x="1156" y="208" width="588" height="160" rx="18" fill="#171427" stroke="#a66cf4" stroke-width="2"/>
+  <text class="sec v" x="1178" y="244">db-vm</text>
+  <text class="body"  x="1178" y="276">e2-small · Debian 12 · us-east1-b · no external IP</text>
+  <text class="body v" x="1178" y="304">NIC: analytics-subnet</text>
+  <text class="mi"    x="1178" y="334">reachable only from web-app-sa on tcp/5432</text>
+
+  <path d="M1036 320 H1106 V288 H1152" fill="none" stroke="#b581ff" stroke-width="4" marker-end="url(#a-v)"/>
+  <text class="mi v" x="1106" y="356" text-anchor="middle">tcp/5432</text>
+
+  <!-- ======= PARTNER ======= -->
+  <rect x="1156" y="496" width="588" height="420" rx="18" fill="#0d1b20" stroke="#46d7ee" stroke-width="2"/>
+  <text class="sec c" x="1178" y="528">partner-vpc</text>
+  <text class="mi"    x="1178" y="550">partner-subnet · 192.168.1.0/24 · us-central1</text>
+
+  <rect x="1176" y="570" width="270" height="116" rx="13" fill="#111d29" stroke="#5aa2ff" stroke-width="1.7"/>
+  <text class="eb b" x="1198" y="598">COMPUTE ENGINE VM</text>
+  <text class="card" x="1198" y="626">partner-client</text>
+  <text class="mi"   x="1198" y="652">us-central1-b · no external IP</text>
+
+  <rect x="1466" y="570" width="258" height="116" rx="13" fill="#111d29" stroke="#5aa2ff" stroke-width="1.7"/>
+  <text class="eb b" x="1488" y="598">FIREWALL</text>
+  <text class="card" x="1488" y="626">partner-allow-iap-ssh</text>
+  <text class="mi"   x="1488" y="652">35.235.240.0/20 → tcp/22</text>
+
+  <rect x="1176" y="712" width="548" height="180" rx="16" fill="#25190f" stroke="#f08b2b" stroke-width="2.2"/>
+  <text class="eb o"  x="1198" y="744">PRIVATE SERVICE CONNECT ENDPOINT</text>
+  <text class="sec"   x="1198" y="776">psc-endpoint</text>
+  <text class="mono"  x="1198" y="806">forwarding rule · load_balancing_scheme = ""</text>
+  <text class="body o" x="1198" y="834">target: retail-api-psc</text>
+  <text class="mi"    x="1198" y="862">IP: psc-endpoint-ip, reserved from partner-subnet</text>
+
+  <path d="M1311 686 V708" fill="none" stroke="#ff9b42" stroke-width="3.6" marker-end="url(#a-o)"/>
+  <text class="mi o" x="1325" y="704">GET :80</text>
+
+  <path d="M1176 800 H1116 V836 H1060" fill="none" stroke="#ff9b42" stroke-width="4.5" marker-end="url(#a-o)"/>
+  <text class="eb o" x="1106" y="782" text-anchor="middle">PSC</text>
+
+  <!-- ======= LOG SINK ======= -->
+  <rect x="36" y="964" width="1728" height="60" rx="18" fill="#111a20" stroke="#5fd694" stroke-width="1.9"/>
+  <text class="sec g" x="66" y="992">Folder-level sink · vpc-flow-logs-to-bq</text>
+  <text class="mi"    x="466" y="992">include_children · log_id("compute.googleapis.com/vpc_flows") → BigQuery in the host project</text>
+  <path d="M246 964 V936" fill="none" stroke="#5fd694" stroke-width="3.2" marker-end="url(#a-g)"/>
+</svg>
